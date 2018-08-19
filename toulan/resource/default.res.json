@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,lanqiu_png,luck_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,description_json,lanqiu_png,lanqiuImg_03_png,lanqiuImg_06_png,lanqiuImg_09_png,lanqiuImg_16_png,lkhong_png,lklan_png",
 			"name": "preload"
 		}
 	],
@@ -127,11 +127,6 @@
 			"name": "bg_jpg"
 		},
 		{
-			"url": "assets/egret_icon.png",
-			"type": "image",
-			"name": "egret_icon_png"
-		},
-		{
 			"name": "description_json",
 			"type": "json",
 			"url": "config/description.json"
@@ -142,9 +137,34 @@
 			"url": "assets/lanqiu.png"
 		},
 		{
-			"name": "luck_png",
+			"name": "lanqiuImg_03_png",
 			"type": "image",
-			"url": "assets/luck.png"
+			"url": "assets/lanqiuImg_03.png"
+		},
+		{
+			"name": "lanqiuImg_06_png",
+			"type": "image",
+			"url": "assets/lanqiuImg_06.png"
+		},
+		{
+			"name": "lanqiuImg_09_png",
+			"type": "image",
+			"url": "assets/lanqiuImg_09.png"
+		},
+		{
+			"name": "lanqiuImg_16_png",
+			"type": "image",
+			"url": "assets/lanqiuImg_16.png"
+		},
+		{
+			"name": "lkhong_png",
+			"type": "image",
+			"url": "assets/lkhong.png"
+		},
+		{
+			"name": "lklan_png",
+			"type": "image",
+			"url": "assets/lklan.png"
 		}
 	]
 }

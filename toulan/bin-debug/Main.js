@@ -166,36 +166,16 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.createGameScene = function () {
-        var _this = this;
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
-        var topMask = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.5);
-        topMask.graphics.drawRect(0, 0, stageW, 172);
-        topMask.graphics.endFill();
-        topMask.y = 33;
-        this.addChild(topMask);
-        var icon = this.createBitmapByName("egret_icon_png");
+        var icon = this.createBitmapByName("lanqiuImg_06_png");
         this.addChild(icon);
         icon.x = 26;
-        icon.y = 33;
-        var line = new egret.Shape();
-        line.graphics.lineStyle(2, 0xffffff);
-        line.graphics.moveTo(0, 0);
-        line.graphics.lineTo(0, 117);
-        line.graphics.endFill();
-        line.x = 172;
-        line.y = 61;
-        this.addChild(line);
-        var colorLabel = new egret.TextField();
-        colorLabel.textColor = 0xffffff;
-        colorLabel.width = stageW - 172;
-        colorLabel.textAlign = "center";
-        colorLabel.text = "Hello Egret";
-        colorLabel.size = 24;
-        colorLabel.x = 172;
-        colorLabel.y = 80;
-        this.addChild(colorLabel);
+        icon.y = 42;
+        var icon1 = this.createBitmapByName("lanqiuImg_03_png");
+        this.addChild(icon1);
+        icon1.x = 600;
+        icon1.y = 42;
         var textfield = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
@@ -221,29 +201,47 @@ var Main = (function (_super) {
         this.addChild(lanqiu);
         lanqiu.x = 206;
         lanqiu.y = 603;
-        var lankuang = this.createBitmapByName("luck_png");
+        var lankuang = this.createBitmapByName("lklan_png");
         this.addChild(lankuang);
         lankuang.x = 206;
-        lankuang.y = 403;
+        lankuang.y = 873;
         lankuang.anchorOffsetX = lankuang.width / 2;
         lankuang.anchorOffsetY = lankuang.height / 2;
+        var lankuangZhongjianX = lankuang.x + lankuang.anchorOffsetX;
+        var lankuangZhongjianY = lankuang.y + lankuang.anchorOffsetY;
+        lankuang.touchEnabled = true;
+        var lankuangX = 0;
+        var lankuangY = 0;
         lankuang.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (e) {
+            lankuangX = e.$stageX;
+            lankuangY = e.$stageY;
         }, this);
-        lankuang.addEventListener(egret.TouchEvent.TOUCH_MOVE, function (e) {
+        var x1 = 0;
+        var y1 = 0;
+        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (e) {
+            x1 = e.$stageX;
+            y1 = e.$stageY;
+        }, this);
+        this.addEventListener(egret.TouchEvent.TOUCH_MOVE, function (e) {
+            var x2 = e.$stageX;
+            var y2 = e.$stageY;
+            //圆心坐标：
+            var y0 = y1;
+            var x0 = (Math.pow((y0 - y2), 2) + Math.pow(x2, 2) + Math.pow(x1, 2)) / (2 * x2 - 2 * x1);
+            console.log("x1:" + x1 + "y1:" + y1);
+            console.log("x0:" + x0 + "y0:" + y0);
+            //半径：
+            var r = x1 - x0;
+            var a = Math.asin((y2 - y1) / (x1 - x0));
+            //篮框旋转角度
+            var jiaodu = a + Math.PI / 2;
+            lankuang.rotation = jiaodu;
         }, this);
         this.addEventListener(egret.Event.ENTER_FRAME, function (evt) {
             //lankuang.rotation += 10;
-            egret.Tween.get(_this._bird).to({ x: loc.x, y: loc.y }, 300, egret.Ease.sineIn);
+            //egret.Tween.get( this._bird ).to( {x:loc.x,y:loc.y}, 300, egret.Ease.sineIn );
             return false; /// 友情提示： startTick 中回调返回值表示执行结束是否立即重绘
         }, this);
-        var shp = new egret.Shape();
-        shp.x = 100;
-        shp.y = 100;
-        shp.graphics.lineStyle(10, 0x00ff00);
-        shp.graphics.beginFill(0xff0000, 1);
-        shp.graphics.drawCircle(200, 200, 50);
-        shp.graphics.endFill();
-        this.addChild(shp);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
