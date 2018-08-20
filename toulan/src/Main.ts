@@ -162,128 +162,85 @@ class Main extends eui.UILayer {
         var lankuangZhongjianX=lankuang.x+lankuang.anchorOffsetX;
         var lankuangZhongjianY=lankuang.y+lankuang.anchorOffsetY;
       
-        lankuang.touchEnabled = true;
-
-        var lankuangX=0;
-        var lankuangY=0;
-        lankuang.addEventListener( egret.TouchEvent.TOUCH_BEGIN,function(e)
-        {
-
-            lankuangX=e.$stageX;
-            lankuangY=e.$stageY;
-
-        }, this );
-        
        
-        var x1=0;
-        var y1=0;
-        var startFlag=1;
+        var x0=0;
+        var y0=0;
+       
         this.addEventListener( egret.TouchEvent.TOUCH_BEGIN,function(e)
         {
-            if(startFlag)
-            {
-                x1=e.$stageX;
-                y1=e.$stageY;
-            }
-            
-            startFlag=0;
-            
+            x0=e.$stageX;
+            y0=e.$stageY;
 
         }, this );
 
-         this.addEventListener( egret.TouchEvent.TOUCH_MOVE,function(e)
+        var x2=0;
+        var y2=0;
+        var x1=0;
+        var y1=0;
+        this.addEventListener( egret.TouchEvent.TOUCH_MOVE,function(e)
         {
 
-            var x2=e.$stageX;
-            var y2=e.$stageY;
-
-            var x0=x1;
-            var y0;
-            if(y2<y1)
+            x1=x2;
+            y1=y2;
+            x2=e.$stageX;
+            y2=e.$stageY;
+            if(x1==0)
             {
-                
+                return;
+            }
+
+            //  console.log("x1:"+x1+"y1:"+y1);
+            // console.log("x2:"+x2+"y2:"+y2);
+            // console.log("x0:"+x0+"y0:"+y0);
+
+            var b=Math.sqrt(Math.pow((x2-x0),2)+Math.pow((y2-y0),2));
+            var a=Math.sqrt(Math.pow((x1-x0),2)+Math.pow((y1-y0),2));
+            var c=Math.sqrt(Math.pow((x2-x2),2)+Math.pow((y2-y1),2));
+
+            var ka=(y1-y0)*(x2-x0);
+            var kb=(y2-y0)*(x1-x0);
+             var jiajiao;
+             var jiaodu;
+
+             console.log("a:"+a);
+             console.log("b:"+b);
+             console.log("c:"+c);
+
+            if(ka==kb)
+            {
+                jiaodu=0;
+                console.log("重合");
             }
             else{
-                y0=(Math.pow((x2-x0),2)-Math.pow((x1-x0),2)+Math.pow(y2,2)-Math.pow(y1,2))/(2*y2-2*y1);
+                    jiajiao=Math.acos((Math.pow(a,2)+Math.pow(b,2)-Math.pow(c,2))/(2*a*b));
+                    if(isNaN(jiajiao))
+                    {
+                        jiajiao=0;
+                    }
+                    //console.log("角度："+jiajiao);
+                    jiaodu=(180/Math.PI)*jiajiao;
+                    
             }
-            
 
-            console.log("x1:"+x1+"y1:"+y1);
-            console.log("x2:"+x2+"y2:"+y2);
-            console.log("x0:"+x0+"y0:"+y0);
-
-            
-            var r=x1-x0;
-            var jiaodu=0;
-
-          
-
-            if(y2==y0&&x0<x2)
+            //判断顺时针还是逆时针
+             var f=(x1-x0)*(y2-y0)-(x2-x0)*(y1-y0);
+            if(f>0)
             {
-                
-                  jiaodu=90;
-                  console.log("x正轴");
-
+                jiaodu=jiaodu;
             }
-            else if(x0==x2&&y0>y2)
+            else if(f<0)
             {
-                jiaodu=180;
-                console.log("y正轴");
+                //左侧 逆时针
+                jiaodu=-jiaodu;
             }
-            else if(y2==y0&&x2<x0)
+            else if(f==0)
             {
-                jiaodu=270;
-                console.log("x负轴");
-            }
-            else if(x0==x2&&y0<y2)
-            {
-                  jiaodu=360;
-                   console.log("y负轴");
-            }
-            //第四象限
-
-            else if(y2<=y1&&y2>y0&&x2>x0){
-
-                  console.log("第四象限");
-                 var a=Math.atan((x2-x0)/(y2-y0));
-                jiaodu=(180/Math.PI)*a;
-               
-
-            }
-             //第一象限
-
-            else if(y2<y0&&x2>x0){
-
-                console.log("第一象限");
-                 var a=Math.atan((y0-y2)/(x2-x0));
-                jiaodu=(180/Math.PI)*a+90;
-               
-
-            }
-             //第二象限
-
-            else if(y0>y2&&x2<x0){
-
-                console.log("第二象限");
-                 var a=Math.atan((x0-x2)/(y0-y2));
-                jiaodu=(180/Math.PI)*a+180;
-               
-
+                jiaodu=0;
             }
 
-            //第三象限
+           
+            lankuang.rotation=lankuang.rotation+jiaodu;
 
-            else if(y2>y0&&y2<=y1&&x2<x0){
-
-                console.log("第三象限");
-                 var a=Math.atan((y2-y0)/(x0-x2));
-                jiaodu=(180/Math.PI)*a+270;
-               
-            }
-
-            lankuang.rotation=-jiaodu;
-
-            console.log("角度："+jiaodu);
 
             
 
