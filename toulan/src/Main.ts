@@ -149,7 +149,7 @@ class Main extends eui.UILayer {
         let lanqiu: egret.Bitmap = this.createBitmapByName("lanqiu_png");
         this.addChild(lanqiu);
         lanqiu.x = 206;
-        lanqiu.y = 603;
+        lanqiu.y = 403;
 
         let lankuang: egret.Bitmap = this.createBitmapByName("lklan_png");
         this.addChild(lankuang);
@@ -177,11 +177,16 @@ class Main extends eui.UILayer {
        
         var x1=0;
         var y1=0;
+        var startFlag=1;
         this.addEventListener( egret.TouchEvent.TOUCH_BEGIN,function(e)
         {
-
-            x1=e.$stageX;
-            y1=e.$stageY;
+            if(startFlag)
+            {
+                x1=e.$stageX;
+                y1=e.$stageY;
+            }
+            
+            startFlag=0;
             
 
         }, this );
@@ -192,19 +197,93 @@ class Main extends eui.UILayer {
             var x2=e.$stageX;
             var y2=e.$stageY;
 
-            //圆心坐标：
-            var y0=y1;
-            var x0=(Math.pow((y0-y2),2)+Math.pow(x2,2)+Math.pow(x1,2))/(2*x2-2*x1);
+            var x0=x1;
+            var y0;
+            if(y2<y1)
+            {
+                
+            }
+            else{
+                y0=(Math.pow((x2-x0),2)-Math.pow((x1-x0),2)+Math.pow(y2,2)-Math.pow(y1,2))/(2*y2-2*y1);
+            }
+            
 
             console.log("x1:"+x1+"y1:"+y1);
+            console.log("x2:"+x2+"y2:"+y2);
             console.log("x0:"+x0+"y0:"+y0);
 
-            //半径：
+            
             var r=x1-x0;
-            var a=Math.asin((y2-y1)/(x1-x0));
-            //篮框旋转角度
-            var jiaodu=a+Math.PI/2;
-            lankuang.rotation=jiaodu;
+            var jiaodu=0;
+
+          
+
+            if(y2==y0&&x0<x2)
+            {
+                
+                  jiaodu=90;
+                  console.log("x正轴");
+
+            }
+            else if(x0==x2&&y0>y2)
+            {
+                jiaodu=180;
+                console.log("y正轴");
+            }
+            else if(y2==y0&&x2<x0)
+            {
+                jiaodu=270;
+                console.log("x负轴");
+            }
+            else if(x0==x2&&y0<y2)
+            {
+                  jiaodu=360;
+                   console.log("y负轴");
+            }
+            //第四象限
+
+            else if(y2<=y1&&y2>y0&&x2>x0){
+
+                  console.log("第四象限");
+                 var a=Math.atan((x2-x0)/(y2-y0));
+                jiaodu=(180/Math.PI)*a;
+               
+
+            }
+             //第一象限
+
+            else if(y2<y0&&x2>x0){
+
+                console.log("第一象限");
+                 var a=Math.atan((y0-y2)/(x2-x0));
+                jiaodu=(180/Math.PI)*a+90;
+               
+
+            }
+             //第二象限
+
+            else if(y0>y2&&x2<x0){
+
+                console.log("第二象限");
+                 var a=Math.atan((x0-x2)/(y0-y2));
+                jiaodu=(180/Math.PI)*a+180;
+               
+
+            }
+
+            //第三象限
+
+            else if(y2>y0&&y2<=y1&&x2<x0){
+
+                console.log("第三象限");
+                 var a=Math.atan((y2-y0)/(x0-x2));
+                jiaodu=(180/Math.PI)*a+270;
+               
+            }
+
+            lankuang.rotation=-jiaodu;
+
+            console.log("角度："+jiaodu);
 
             
 
@@ -216,7 +295,8 @@ class Main extends eui.UILayer {
 
         this.addEventListener( egret.Event.ENTER_FRAME, ( evt:egret.Event )=>{
 
-        //lankuang.rotation += 10;
+        //  lankuang.rotation += -1;
+        // console.log( lankuang.rotation);
 
         
         //egret.Tween.get( this._bird ).to( {x:loc.x,y:loc.y}, 300, egret.Ease.sineIn );
