@@ -166,6 +166,7 @@ var Main = (function (_super) {
      * Create scene interface
      */
     Main.prototype.createGameScene = function () {
+        var _this = this;
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
         var icon = this.createBitmapByName("lanqiuImg_06_png");
@@ -197,18 +198,18 @@ var Main = (function (_super) {
         button1.horizontalCenter = 100;
         button1.verticalCenter = 100;
         this.addChild(button1);
-        var lanqiu = this.createBitmapByName("lanqiu_png");
-        this.addChild(lanqiu);
-        lanqiu.x = 206;
-        lanqiu.y = 403;
         var lankuang = this.createBitmapByName("lklan_png");
-        this.addChild(lankuang);
         lankuang.x = 206;
         lankuang.y = 873;
         lankuang.anchorOffsetX = lankuang.width / 2;
         lankuang.anchorOffsetY = lankuang.height / 2;
         var lankuangZhongjianX = lankuang.x + lankuang.anchorOffsetX;
         var lankuangZhongjianY = lankuang.y + lankuang.anchorOffsetY;
+        var lanqiu = this.createBitmapByName("lanqiu_png");
+        this.addChild(lanqiu);
+        lanqiu.x = lankuang.x - lanqiu.width / 2;
+        lanqiu.y = lankuang.y - lanqiu.height / 2;
+        this.addChild(lankuang);
         var x0 = 0;
         var y0 = 0;
         this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (e) {
@@ -233,27 +234,21 @@ var Main = (function (_super) {
             var b = Math.sqrt(Math.pow((x2 - x0), 2) + Math.pow((y2 - y0), 2));
             var a = Math.sqrt(Math.pow((x1 - x0), 2) + Math.pow((y1 - y0), 2));
             var c = Math.sqrt(Math.pow((x2 - x2), 2) + Math.pow((y2 - y1), 2));
-            var ka = (y1 - y0) * (x2 - x0);
-            var kb = (y2 - y0) * (x1 - x0);
             var jiajiao;
             var jiaodu;
-            console.log("a:" + a);
-            console.log("b:" + b);
-            console.log("c:" + c);
-            if (ka == kb) {
-                jiaodu = 0;
-                console.log("重合");
-            }
-            else {
-                jiajiao = Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b));
-                if (isNaN(jiajiao)) {
-                    jiajiao = 0;
-                }
-                //console.log("角度："+jiajiao);
-                jiaodu = (180 / Math.PI) * jiajiao;
+            //  console.log("a:"+a);
+            //  console.log("b:"+b);
+            //  console.log("c:"+c);
+            jiajiao = Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b));
+            var f;
+            if (isNaN(jiajiao)) {
+                jiajiao = 0;
+                console.log("jiaodu：" + jiajiao);
             }
             //判断顺时针还是逆时针
-            var f = (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
+            f = (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
+            console.log("角度：" + jiajiao);
+            jiaodu = (180 / Math.PI) * jiajiao;
             if (f > 0) {
                 jiaodu = jiaodu;
             }
@@ -266,12 +261,33 @@ var Main = (function (_super) {
             }
             lankuang.rotation = lankuang.rotation + jiaodu;
         }, this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            egret.Tween.get(lanqiu, { onChange: function () {
+                    var px = lanqiu.x + lanqiu.width / 2;
+                    var py = lanqiu.y + lanqiu.height;
+                    var isHit = lankuang.hitTestPoint(px, py, true);
+                    if (isHit) {
+                        console.log("x:" + px);
+                        console.log("y:" + py);
+                        console.log(isHit);
+                    }
+                }, onChangeObj: _this }).to({ x: lanqiu.x, y: 200 }, 600, egret.Ease.sineInOut).to({ x: lanqiu.x, y: 820 }, 300, egret.Ease.sineIn);
+            ;
+        }, this);
         this.addEventListener(egret.Event.ENTER_FRAME, function (evt) {
             //  lankuang.rotation += -1;
             // console.log( lankuang.rotation);
-            //egret.Tween.get( this._bird ).to( {x:loc.x,y:loc.y}, 300, egret.Ease.sineIn );
             return false; /// 友情提示： startTick 中回调返回值表示执行结束是否立即重绘
         }, this);
+    };
+    Main.hitTest = function (obj1, obj2) {
+        var rect1 = obj1.getBounds();
+        var rect2 = obj2.getBounds();
+        rect1.x = obj1.x;
+        rect1.y = obj1.y;
+        rect2.x = obj2.x;
+        rect2.y = obj2.y;
+        return rect1.intersects(rect2);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -325,3 +341,4 @@ var Main = (function (_super) {
     return Main;
 }(eui.UILayer));
 __reflect(Main.prototype, "Main");
+//# sourceMappingURL=Main.js.map

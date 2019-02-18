@@ -146,13 +146,10 @@ class Main extends eui.UILayer {
         this.addChild(button1);
 
 
-        let lanqiu: egret.Bitmap = this.createBitmapByName("lanqiu_png");
-        this.addChild(lanqiu);
-        lanqiu.x = 206;
-        lanqiu.y = 403;
+       
 
         let lankuang: egret.Bitmap = this.createBitmapByName("lklan_png");
-        this.addChild(lankuang);
+       
         lankuang.x = 206;
         lankuang.y = 873;
 
@@ -162,6 +159,14 @@ class Main extends eui.UILayer {
         var lankuangZhongjianX=lankuang.x+lankuang.anchorOffsetX;
         var lankuangZhongjianY=lankuang.y+lankuang.anchorOffsetY;
       
+
+        let lanqiu: egret.Bitmap = this.createBitmapByName("lanqiu_png");
+        this.addChild(lanqiu);
+        lanqiu.x =  lankuang.x-lanqiu.width/2;
+        lanqiu.y =  lankuang.y-lanqiu.height/2;
+
+         this.addChild(lankuang);
+
        
         var x0=0;
         var y0=0;
@@ -197,33 +202,32 @@ class Main extends eui.UILayer {
             var a=Math.sqrt(Math.pow((x1-x0),2)+Math.pow((y1-y0),2));
             var c=Math.sqrt(Math.pow((x2-x2),2)+Math.pow((y2-y1),2));
 
-            var ka=(y1-y0)*(x2-x0);
-            var kb=(y2-y0)*(x1-x0);
+            
              var jiajiao;
              var jiaodu;
 
-             console.log("a:"+a);
-             console.log("b:"+b);
-             console.log("c:"+c);
+            //  console.log("a:"+a);
+            //  console.log("b:"+b);
+            //  console.log("c:"+c);
+            
+            jiajiao=Math.acos((Math.pow(a,2)+Math.pow(b,2)-Math.pow(c,2))/(2*a*b));
 
-            if(ka==kb)
+            var f;
+            if(isNaN(jiajiao))
             {
-                jiaodu=0;
-                console.log("重合");
+                jiajiao=0;
+                console.log("jiaodu："+jiajiao);
             }
-            else{
-                    jiajiao=Math.acos((Math.pow(a,2)+Math.pow(b,2)-Math.pow(c,2))/(2*a*b));
-                    if(isNaN(jiajiao))
-                    {
-                        jiajiao=0;
-                    }
-                    //console.log("角度："+jiajiao);
-                    jiaodu=(180/Math.PI)*jiajiao;
-                    
-            }
+
 
             //判断顺时针还是逆时针
-             var f=(x1-x0)*(y2-y0)-(x2-x0)*(y1-y0);
+            f=(x1-x0)*(y2-y0)-(x2-x0)*(y1-y0);
+
+            console.log("角度："+jiajiao);
+            
+            jiaodu=(180/Math.PI)*jiajiao;
+                    
+            
             if(f>0)
             {
                 jiaodu=jiaodu;
@@ -248,7 +252,27 @@ class Main extends eui.UILayer {
 
 
 
-        
+
+        this.stage.addEventListener( egret.TouchEvent.TOUCH_TAP, ()=>{
+
+            egret.Tween.get( lanqiu,{onChange:function()
+                {
+                    var px=lanqiu.x+lanqiu.width/2;
+                    var py=lanqiu.y+lanqiu.height;
+
+                    var isHit:boolean = lankuang.hitTestPoint(px,py,true);
+                    if(isHit)
+                    {
+                        console.log("x:"+px);
+                        console.log("y:"+py);
+                        console.log(isHit);
+                    }
+                    
+
+                },onChangeObj:this}).to( {x:lanqiu.x,y:200}, 600, egret.Ease.sineInOut ).to( {x:lanqiu.x,y:820}, 300, egret.Ease.sineIn );;
+
+        }, this );
+
 
         this.addEventListener( egret.Event.ENTER_FRAME, ( evt:egret.Event )=>{
 
@@ -256,8 +280,6 @@ class Main extends eui.UILayer {
         // console.log( lankuang.rotation);
 
         
-        //egret.Tween.get( this._bird ).to( {x:loc.x,y:loc.y}, 300, egret.Ease.sineIn );
-
            
             
             return false;  /// 友情提示： startTick 中回调返回值表示执行结束是否立即重绘
@@ -270,6 +292,16 @@ class Main extends eui.UILayer {
     }
 
 
+    public static hitTest(obj1:egret.DisplayObject,obj2:egret.DisplayObject):boolean
+        {
+            var rect1: egret.Rectangle = obj1.getBounds();
+            var rect2: egret.Rectangle = obj2.getBounds();
+            rect1.x = obj1.x;
+            rect1.y = obj1.y;
+            rect2.x = obj2.x;
+            rect2.y = obj2.y;
+            return rect1.intersects(rect2);
+        }
     
 
     /**
